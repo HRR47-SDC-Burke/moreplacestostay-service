@@ -25,6 +25,24 @@ class App extends React.Component {
       })
   }
 
+  postRequest() {
+    axios.post('http://127.0.0.1:3030/api/moreplacestostay')
+      .then(data => {
+      })
+  }
+
+  putRequest() {
+    axios.put('http://127.0.0.1:3030/api/moreplacestostay')
+      .then(data => {
+      })
+  }
+
+  deleteRequest() {
+    axios.delete('http://127.0.0.1:3030/api/moreplacestostay')
+      .then(data => {
+      })
+  }
+
   render() {
     const settings = {
       dots: false,

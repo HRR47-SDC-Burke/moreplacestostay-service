@@ -36,6 +36,15 @@ app.get('/api/moreplacestostay', (req, res) => { // Make different API call urls
   })
 });
 
+app.post('/api/moreplacestostay', (req, res) => {
+});
+
+app.put('/api/moreplacestostay', (req, res) => {
+});
+
+app.delete('/api/moreplacestostay', (req, res) => {
+});
+
 app.listen(3030, () => {
   console.log('Server running on 3030');
 });
