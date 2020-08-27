@@ -18,35 +18,31 @@ connection.once('open', () => {
 
 var documents = [];
 
-var generateRandomDocs = function () {
-  for (var i=0; i<100; i++) {
-    var document = {};
+var potentialLocations = ['Santorini', 'Mykonos', 'Paros', 'Crete', 'Naxos', 'Corfu', 'Zakynthos', 'Milos', 'Hydra', 'Skiathos', 'Lefkada', 'Patmos', 'Delos', 'Kos', 'Icaria', 'Amorgos', 'Syros', 'Samos', 'Chios'];
 
-    var getRandomInt = function (max) {
-      return Math.floor(Math.random() * Math.floor(max));
-    };
+var potentialHousingTypes = ['Villa', 'Palace', 'Bungalow', 'Mansion', 'Escape', 'House', 'Vista'];
 
-    var potentialLocations = ['Santorini', 'Mykonos', 'Paros', 'Crete', 'Naxos', 'Corfu', 'Zakynthos', 'Milos', 'Hydra', 'Skiathos', 'Lefkada', 'Patmos', 'Delos', 'Kos', 'Icaria', 'Amorgos', 'Syros', 'Samos', 'Chios'];
+var potentialPrefixes = ['The', 'Wonderful', 'Magnificent', 'Quiet', 'Gorgeous'];
 
-    var potentialHousingTypes = ['Villa', 'Palace', 'Bungalow', 'Mansion', 'Escape', 'House', 'Vista'];
-
-    var potentialPrefixes = ['The', 'Wonderful', 'Magnificent', 'Quiet', 'Gorgeous'];
-
-    document.name = `${potentialPrefixes[getRandomInt(potentialPrefixes.length)]} ${potentialLocations[getRandomInt(potentialLocations.length)]} ${potentialHousingTypes[getRandomInt(potentialHousingTypes.length)]}`;
-
-    var randomIntFromInterval = function (min, max) {
-      return Math.floor(Math.random() * (max - min + 1) + min);
-    };
-
-    document.price = randomIntFromInterval(400, 4000);
-
-    document.imageurl = `https://airbnbvillas.s3.us-east-2.amazonaws.com/${getRandomInt(28)}.jpg`;
-
-    documents.push(document);
-  }
+var getRandomInt = function (max) {
+  return Math.floor(Math.random() * Math.floor(max));
 };
 
-generateRandomDocs();
+var randomIntFromInterval = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+for (var i=0; i<100; i++) {
+  var document = {};
+
+  document.name = `${potentialPrefixes[getRandomInt(potentialPrefixes.length)]} ${potentialLocations[getRandomInt(potentialLocations.length)]} ${potentialHousingTypes[getRandomInt(potentialHousingTypes.length)]}`;
+
+  document.price = randomIntFromInterval(400, 4000);
+
+  document.imageurl = `https://airbnbvillas.s3.us-east-2.amazonaws.com/${getRandomInt(28)}.jpg`;
+
+  documents.push(document);
+}
 
 const airbnbSchema = new mongoose.Schema({
   name: String,
@@ -72,4 +68,3 @@ Airbnbs.deleteMany({}, (err, data) => {
 
   console.log('Database seeded');
 });
-

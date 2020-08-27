@@ -38,11 +38,13 @@ airbnbSchema.plugin(AutoIncrement, { inc_field: 'id' });
 
 const Airbnbs = mongoose.model('Airbnbs', airbnbSchema);
 
-app.get('/api/moreplacestostay', (req, res) => { // Make different API call urls + have them return 12 docs
-  // changed to avoid getting ALL DATA
-  Airbnbs.find({})
-    .limit(12)
-    .exec((err, data) => {
+// Make different API call urls + have them return 12 docs
+app.get('/api/moreplacestostay', (req, res) => {
+  // Use random input to avoid always getting first few data
+  // add search condition to avoid getting ALL DATA
+  var start = Math.floor(Math.random() * 88);
+  var end = start + 13;
+  Airbnbs.find({ id: { $gt: start, $lt: end } }, (err, data) => {
     if (err) res.status(404).send(err);
     res.send(data);
     });
