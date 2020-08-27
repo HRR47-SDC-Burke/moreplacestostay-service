@@ -85,7 +85,36 @@ To run tests:
 npm run test
 ```
 
+### CRUD routes
 
-(remove this note later)
-Use npx npkill later on
-check https://www.npmjs.com/package/npkill
+POST:
+
+```sh
+/api/moreplacestostay
+```
+
+Create new location
+
+GET:
+
+```sh
+/api/moreplacestostay
+```
+
+Return 12 locations
+
+PUT:
+
+```sh
+/api/moreplacestostay
+```
+
+Update a location information
+
+DELETE:
+
+```sh
+/api/moreplacestostay
+```
+
+Delete a location
