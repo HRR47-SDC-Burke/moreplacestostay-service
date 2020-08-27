@@ -1,11 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const app = express();
 
 const url = `mongodb+srv://Henry:henry@cluster0.8a9be.mongodb.net/airbnb?retryWrites=true&w=majority`;
 
-mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
+mongoose.connect(url, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+});
 
 const connection = mongoose.connection;
 
@@ -27,6 +33,9 @@ const airbnbSchema = new mongoose.Schema({
   imageurl: String,
 });
 
+// create id property with auto increment
+airbnbSchema.plugin(AutoIncrement, { inc_field: 'id' });
+
 const Airbnbs = mongoose.model('Airbnbs', airbnbSchema);
 
 app.get('/api/moreplacestostay', (req, res) => { // Make different API call urls + have them return 12 docs
@@ -43,23 +52,20 @@ app.get('/api/moreplacestostay', (req, res) => { // Make different API call urls
 app.post('/api/moreplacestostay', (req, res) => {
   // get the object to post from req
   var { id, name, price, imageurl } = req.body;
-  Airbnbs.insertOne({ name, price: parseInt(price, 10), imageurl }, (err, data) => {
+  Airbnbs.create({ name, price: parseInt(price, 10), imageurl }, (err, data) => {
     if (err) res.status(404).send(err);
     res.send(data);
-  })
+  });
 });
 
 // PUT update name, price, and imageurl of given id
 app.put('/api/moreplacestostay', (req, res) => {
   var { id } = req.body;
-  // delete that id and then put in the new one
-  Airbnbs.deleteOne({ id: parseInt(id, 10) }, (err) => {
+  // update that id with new data
+  Airbnbs.updateOne({ id: parseInt(id, 10) }, req.body, (err, data) => {
     if (err) res.status(404).send(err);
-    Airbnbs.insertOne(req.body, (error, data) => {
-      if (error) res.status(404).send(error);
-      res.send(data);
-    })
-  })
+    res.send(data);
+  });
 });
 
 // DELETE an existing data of given id
@@ -67,8 +73,8 @@ app.delete('/api/moreplacestostay', (req, res) => {
   var { id } = req.body;
   Airbnbs.deleteOne({ id: parseInt(id, 10) }, (err, data) => {
     if (err) res.status(404).send(err);
-    res.send(data);
-  })
+    res.send('delete success');
+  });
 });
 
 app.listen(3030, () => {
