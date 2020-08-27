@@ -94,6 +94,7 @@ POST:
 ```
 
 > Create new location
+
 Pass in an object with properties name, price, and imageUrl in the request body.
 
 GET:
@@ -103,6 +104,7 @@ GET:
 ```
 
 > Return 12 locations
+
 No request body needed.
 
 PUT:
@@ -112,6 +114,7 @@ PUT:
 ```
 
 > Update a location information
+
 Pass in an object with property id for target data, and others for update content in the request body.
 
 DELETE:
@@ -121,4 +124,5 @@ DELETE:
 ```
 
 > Delete a location
+
 Pass in an object with property id in the request body.
