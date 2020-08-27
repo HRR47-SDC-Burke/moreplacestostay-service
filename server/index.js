@@ -35,11 +35,9 @@ app.get('/api/moreplacestostay', (req, res) => { // Make different API call urls
     .limit(12)
     .exec((err, data) => {
     if (err) res.status(404).send(err);
-    console.log(data.length);
     res.send(data);
     });
 });
-
 
 // POST add a new image with name and price
 app.post('/api/moreplacestostay', (req, res) => {
