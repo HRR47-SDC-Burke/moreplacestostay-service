@@ -22,7 +22,7 @@ class App extends React.Component {
         this.setState({
           places: data.data
         })
-      })
+      });
   }
 
   render() {

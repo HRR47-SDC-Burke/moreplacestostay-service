@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const url = `mongodb+srv://Henry:henry@cluster0.8a9be.mongodb.net/airbnb?retryWrites=true&w=majority`;
 
-mongoose.connect(url, {useNewUrlParser: true, useCreateIndex: true});
+mongoose.connect(url, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+});
 
 const connection = mongoose.connection;
 
@@ -48,16 +54,22 @@ const airbnbSchema = new mongoose.Schema({
   imageurl: String,
 });
 
+airbnbSchema.plugin(AutoIncrement, { inc_field: 'id' });
+
 const Airbnbs = mongoose.model('Airbnbs', airbnbSchema);
 
-documents.map(document => {
-  const airbnbs = new Airbnbs({
-    name: document.name,
-    price: document.price,
-    imageurl: document.imageurl
+// clear database before input new data
+Airbnbs.deleteMany({}, (err, data) => {
+  documents.map(document => {
+    const airbnbs = new Airbnbs({
+      name: document.name,
+      price: document.price,
+      imageurl: document.imageurl
+    });
+
+    airbnbs.save()
   });
 
-  airbnbs.save()
+  console.log('Database seeded');
 });
 
-console.log('Database seeded');
