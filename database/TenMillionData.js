@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const faker = require('faker');
-
-const url = `mongodb+srv://Henry:henry@cluster0.8a9be.mongodb.net/airbnb?retryWrites=true&w=majority`;
+const { url, imageUrl } = require('../config.js');
 
 mongoose.connect(url, {
   useNewUrlParser: true,
@@ -45,7 +44,7 @@ const randomLocationName = () => {
 };
 
 const documents = [];
-const totalNumberOfData = 10000000;
+const totalNumberOfData = 100;
 
 for (var i = 1; i <= totalNumberOfData; i++) {
   const document = { id: i};
@@ -54,7 +53,7 @@ for (var i = 1; i <= totalNumberOfData; i++) {
 
   document.price = randomPrice();
 
-  document.imageurl = `https://airbnbvillas.s3.us-east-2.amazonaws.com/${randomInt(28)+1}.jpg`;
+  document.imageurl = `${imageUrl}/${randomInt(28)+1}.jpg`;
 
   documents.push(document);
 }
@@ -66,20 +65,22 @@ const airbnbSchema = new mongoose.Schema({
   imageurl: String,
 });
 
-const Airbnbs = mongoose.model('Airbnbs', airbnbSchema);
+const Airbnb = mongoose.model('Airbnb', airbnbSchema);
 
 // clear database before input new data
-Airbnbs.deleteMany({}, (err, data) => {
+Airbnb.deleteMany({}, (err, data) => {
   documents.map(document => {
-    const airbnbs = new Airbnbs({
+    const airbnb = new Airbnb({
       id: document.id,
       name: document.name,
       price: document.price,
       imageurl: document.imageurl
     });
 
-    airbnbs.save();
+    airbnb.save();
     // somehow this file wouldn't end itself so leave this log to know when it's finished
-    console.log('Database seeded');
+    if (document.id === totalNumberOfData) {
+      console.log('Database seeded');
+    }
   });
 });

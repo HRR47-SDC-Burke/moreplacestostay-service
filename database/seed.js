@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
-
-const url = `mongodb+srv://Henry:henry@cluster0.8a9be.mongodb.net/airbnb?retryWrites=true&w=majority`;
+const { url, imageUrl } = require('../config.js');
 
 mongoose.connect(url, {
   useNewUrlParser: true,
@@ -16,30 +15,39 @@ connection.once('open', () => {
   console.log('MongoDB database connection established successfully');
 });
 
-var documents = [];
+var prefixes = ['The', 'Wonderful', 'Magnificent', 'Quiet', 'Gorgeous'];
 
-var potentialLocations = ['Santorini', 'Mykonos', 'Paros', 'Crete', 'Naxos', 'Corfu', 'Zakynthos', 'Milos', 'Hydra', 'Skiathos', 'Lefkada', 'Patmos', 'Delos', 'Kos', 'Icaria', 'Amorgos', 'Syros', 'Samos', 'Chios'];
+var locations = [
+  'Santorini', 'Mykonos', 'Paros', 'Crete', 'Naxos', 'Corfu',
+  'Zakynthos', 'Milos', 'Hydra', 'Skiathos', 'Lefkada', 'Patmos',
+  'Delos', 'Kos', 'Icaria', 'Amorgos', 'Syros', 'Samos', 'Chios'];
 
-var potentialHousingTypes = ['Villa', 'Palace', 'Bungalow', 'Mansion', 'Escape', 'House', 'Vista'];
+var housingTypes = [
+  'Villa', 'Palace', 'Bungalow', 'Mansion', 'Escape', 'House', 'Vista'
+];
 
-var potentialPrefixes = ['The', 'Wonderful', 'Magnificent', 'Quiet', 'Gorgeous'];
-
-var getRandomInt = function (max) {
+var randomInt = function (max) {
   return Math.floor(Math.random() * Math.floor(max));
 };
 
-var randomIntFromInterval = function (min, max) {
+var randomInterval = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
+
+var randomName = function () {
+  return `${prefixes[randomInt(5)]} ${locations[randomInt(19)]} ${housingTypes[randomInt(7)]}`;
+}
+
+var documents = [];
 
 for (var i=0; i<100; i++) {
   var document = {};
 
-  document.name = `${potentialPrefixes[getRandomInt(potentialPrefixes.length)]} ${potentialLocations[getRandomInt(potentialLocations.length)]} ${potentialHousingTypes[getRandomInt(potentialHousingTypes.length)]}`;
+  document.name = randomName();
 
-  document.price = randomIntFromInterval(400, 4000);
+  document.price = randomInterval(400, 4000);
 
-  document.imageurl = `https://airbnbvillas.s3.us-east-2.amazonaws.com/${getRandomInt(28)}.jpg`;
+  document.imageurl = `${imageUrl}/${randomInt(28) + 1}.jpg`;
 
   documents.push(document);
 }
