@@ -93,7 +93,8 @@ POST:
 /api/moreplacestostay
 ```
 
-Create new location
+> Create new location
+Pass in an object with properties name, price, and imageUrl in the request body.
 
 GET:
 
@@ -101,7 +102,8 @@ GET:
 /api/moreplacestostay
 ```
 
-Return 12 locations
+> Return 12 locations
+No request body needed.
 
 PUT:
 
@@ -109,7 +111,8 @@ PUT:
 /api/moreplacestostay
 ```
 
-Update a location information
+> Update a location information
+Pass in an object with property id for target data, and others for update content in the request body.
 
 DELETE:
 
@@ -117,4 +120,5 @@ DELETE:
 /api/moreplacestostay
 ```
 
-Delete a location
+> Delete a location
+Pass in an object with property id in the request body.
