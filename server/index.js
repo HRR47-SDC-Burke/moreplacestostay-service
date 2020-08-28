@@ -40,7 +40,8 @@ const Airbnb = mongoose.model('Airbnb', airbnbSchema);
 // Make different API call urls + have them return 12 docs
 app.get('/api/moreplacestostay', (req, res) => {
   // Use random input to avoid always getting first few data
-  var start = Math.floor(Math.random() * 89);
+  // need to change this to not use math random
+  var start = Date.now() % 989;
   var end = start + 13;
 
   // add search condition to avoid getting ALL DATA
@@ -82,11 +83,3 @@ app.delete('/api/moreplacestostay', (req, res) => {
 app.listen(3030, () => {
   console.log('Server running on 3030');
 });
-
-
-
-
-
-
-
-
