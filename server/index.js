@@ -1,10 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
+const { url } = require('../config.js');
 
 const app = express();
-
-const url = `mongodb+srv://Henry:henry@cluster0.8a9be.mongodb.net/airbnb?retryWrites=true&w=majority`;
 
 mongoose.connect(url, {
   useNewUrlParser: true,
@@ -36,13 +35,16 @@ const airbnbSchema = new mongoose.Schema({
 // create id property with auto increment
 airbnbSchema.plugin(AutoIncrement, { inc_field: 'id' });
 
-const Airbnbs = mongoose.model('Airbnbs', airbnbSchema);
+const Airbnb = mongoose.model('Airbnb', airbnbSchema);
 
-app.get('/api/moreplacestostay', (req, res) => { // Make different API call urls + have them return 12 docs
-  // changed to avoid getting ALL DATA
-  Airbnbs.find({})
-    .limit(12)
-    .exec((err, data) => {
+// Make different API call urls + have them return 12 docs
+app.get('/api/moreplacestostay', (req, res) => {
+  // Use random input to avoid always getting first few data
+  var start = Math.floor(Math.random() * 89);
+  var end = start + 13;
+
+  // add search condition to avoid getting ALL DATA
+  Airbnb.find({ id: { $gt: start, $lt: end } }, (err, data) => {
     if (err) res.status(404).send(err);
     res.send(data);
     });
@@ -52,7 +54,7 @@ app.get('/api/moreplacestostay', (req, res) => { // Make different API call urls
 app.post('/api/moreplacestostay', (req, res) => {
   // get the object to post from req
   var { id, name, price, imageurl } = req.body;
-  Airbnbs.create({ name, price: parseInt(price, 10), imageurl }, (err, data) => {
+  Airbnb.create({ name, price: parseInt(price, 10), imageurl }, (err, data) => {
     if (err) res.status(404).send(err);
     res.send(data);
   });
@@ -62,7 +64,7 @@ app.post('/api/moreplacestostay', (req, res) => {
 app.put('/api/moreplacestostay', (req, res) => {
   var { id } = req.body;
   // update that id with new data
-  Airbnbs.updateOne({ id: parseInt(id, 10) }, req.body, (err, data) => {
+  Airbnb.updateOne({ id: parseInt(id, 10) }, req.body, (err, data) => {
     if (err) res.status(404).send(err);
     res.send(data);
   });
@@ -71,7 +73,7 @@ app.put('/api/moreplacestostay', (req, res) => {
 // DELETE an existing data of given id
 app.delete('/api/moreplacestostay', (req, res) => {
   var { id } = req.body;
-  Airbnbs.deleteOne({ id: parseInt(id, 10) }, (err, data) => {
+  Airbnb.deleteOne({ id: parseInt(id, 10) }, (err, data) => {
     if (err) res.status(404).send(err);
     res.send('delete success');
   });
