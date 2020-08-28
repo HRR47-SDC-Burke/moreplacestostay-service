@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
+const fs = require('fs');
+const readline = require('readline');
 const { url } = require('../config.js');
-const { documents } = require('./TenMillionData.js');
+const { readEachLine } = require('./fileReader.js');
 
 mongoose.connect(url, {
   useNewUrlParser: true,
@@ -26,18 +28,16 @@ const Airbnb = mongoose.model('Airbnb', airbnbSchema);
 
 // clear database before input new data
 Airbnb.deleteMany({}, (err, data) => {
-  documents.map(document => {
-    const airbnb = new Airbnb({
-      id: document.id,
-      name: document.name,
-      price: document.price,
-      imageurl: document.imageurl
+  readEachLine('tenmilliondata.txt', (data) => {
+    Airbnb.create(data, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
     });
 
-    airbnb.save();
-    // somehow this file wouldn't end itself so leave this log to know when it's finished
-    if (document.id === totalNumberOfData) {
-      console.log('Database seeded');
+    // notification if done creating
+    if (data.id === 10000000) {
+      console.log('done');
     }
   });
 });

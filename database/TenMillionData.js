@@ -1,3 +1,4 @@
+const fs = require('fs');
 const faker = require('faker');
 const { newImageUrl } = require('../config.js');
 
@@ -30,7 +31,15 @@ const randomLocationName = () => {
   return (name.length < 36) ? name : randomLocationName();
 };
 
-const documents = [];
+// clear file
+fs.writeFile('tenmilliondata.txt', '', (err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('clear');
+  }
+})
+
 const totalNumberOfData = 10000000;
 
 for (var i = 1; i <= totalNumberOfData; i++) {
@@ -38,9 +47,11 @@ for (var i = 1; i <= totalNumberOfData; i++) {
   document.name = randomLocationName();
   document.price = randomPrice();
   document.imageurl = `${newImageUrl}/${randomInt(1000)+1}.jpg`;
-  documents.push(document);
-}
 
-module.exports = {
-  documents
-};
+  // each data uses a line
+  fs.appendFile('tenmilliondata.txt', JSON.stringify(document) + '\n', (err) => {
+    if (err) {
+      console.log(err);
+    }
+  })
+}
