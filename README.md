@@ -126,3 +126,18 @@ DELETE:
 > Delete a location
 
 Pass in an object with property id in the request body.
+
+### 10,000,000 data
+
+```sh
+npm run dataGen
+```
+
+Creating 10000000 data in a text file tenmilliondata.txt
+
+
+```sh
+npm run seeding
+```
+
+store data in tenmilliondata.txt into database

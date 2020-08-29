@@ -10,7 +10,8 @@
   "scripts": {
     "server": "nodemon ./server/index.js",
     "database": "node ./database/seed.js",
-    "newSeeding": "node ./database/SuperSeeding.js",
+    "dataGen": "node ./database/TenMillionData.js",
+    "seeding": "node ./database/SuperSeeding.js",
     "serve": "webpack-dev-server --mode development",
     "build": "webpack --mode production",
     "test": "jest"
