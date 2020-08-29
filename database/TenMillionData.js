@@ -47,31 +47,11 @@ fs.writeFile('tenmilliondata.txt', '', (err) => {
   } else {
     console.log('clear');
   }
-})
-
-const totalNumberOfData = 10000000;
-
-/* for (var i = 0; i < totalNumberOfData / 10; i++) {
-  // write 10 data at a time ot reduce times appendFile called
-  let pack = '';
-  for (var j = 1; j <= 10; j++) {
-    const document = generatePlace(i * 10 + j);
-
-    // each data uses 1 line
-    pack += JSON.stringify(document) + '\n';
-  }
-
-  // data order may be off in the txt file due to function asnyc nature
-  // but doesn't affect final outcome
-  fs.appendFile('tenmilliondata.txt', pack, (err) => {
-    if (err) {
-      console.log(err);
-    }
-  })
-} */
+});
 
 const writer = fs.createWriteStream('tenmilliondata.txt', { flags: 'a' });
 
+const totalNumberOfData = 10000000;
 let count = 1;
 
 const writeFile = () => {
@@ -80,17 +60,23 @@ const writeFile = () => {
 
   // don't use for loop because of the drain down there
   while (count <= totalNumberOfData && ok) {
+    // combine 10 data in string version
     let pack = '';
-    while (count <= totalNumberOfData) {
-      pack += JSON.stringify(generatePlace(count);
-      count++;
+    for (var i = 0; i < 10; i++) {
+      pack += JSON.stringify(generatePlace(count + i)) + '\n';
     }
+    count += 10;
     // write 10 data at once to reduce times write is invoked
-    ok = writer.write(pack), (err) => {
+    ok = writer.write(pack, (err) => {
       if (err) {
         throw err;
       }
     });
+
+
+    if (count % 10000 === 1) {
+      console.log(count);
+    }
   }
 
   // if not ok but not complete yet, drain
