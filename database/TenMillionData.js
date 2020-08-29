@@ -31,6 +31,15 @@ const randomLocationName = () => {
   return (name.length < 36) ? name : randomLocationName();
 };
 
+const generatePlace = (id) => {
+  return {
+    id: id,
+    name: randomLocationName(),
+    price: randomPrice(),
+    imageurl: `${newImageUrl}/${randomInt(1000)+1}.jpg`
+  };
+}
+
 // clear file
 fs.writeFile('tenmilliondata.txt', '', (err) => {
   if (err) {
@@ -42,16 +51,52 @@ fs.writeFile('tenmilliondata.txt', '', (err) => {
 
 const totalNumberOfData = 10000000;
 
-for (var i = 1; i <= totalNumberOfData; i++) {
-  const document = { id: i};
-  document.name = randomLocationName();
-  document.price = randomPrice();
-  document.imageurl = `${newImageUrl}/${randomInt(1000)+1}.jpg`;
+/* for (var i = 0; i < totalNumberOfData / 10; i++) {
+  // write 10 data at a time ot reduce times appendFile called
+  let pack = '';
+  for (var j = 1; j <= 10; j++) {
+    const document = generatePlace(i * 10 + j);
 
-  // each data uses a line
-  fs.appendFile('tenmilliondata.txt', JSON.stringify(document) + '\n', (err) => {
+    // each data uses 1 line
+    pack += JSON.stringify(document) + '\n';
+  }
+
+  // data order may be off in the txt file due to function asnyc nature
+  // but doesn't affect final outcome
+  fs.appendFile('tenmilliondata.txt', pack, (err) => {
     if (err) {
       console.log(err);
     }
   })
-}
+} */
+
+const writer = fs.createWriteStream('tenmilliondata.txt', { flags: 'a' });
+
+let count = 1;
+
+const writeFile = () => {
+  // check if heap is full
+  let ok = true;
+
+  // don't use for loop because of the drain down there
+  while (count <= totalNumberOfData && ok) {
+    let pack = '';
+    while (count <= totalNumberOfData) {
+      pack += JSON.stringify(generatePlace(count);
+      count++;
+    }
+    // write 10 data at once to reduce times write is invoked
+    ok = writer.write(pack), (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  }
+
+  // if not ok but not complete yet, drain
+  if (count <= totalNumberOfData) {
+    writer.once('drain', writeFile);
+  }
+};
+
+writeFile();
