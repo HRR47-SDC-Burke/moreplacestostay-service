@@ -134,6 +134,8 @@ npm run dataGen
 ```
 
 Creating 10000000 data in a text file tenmilliondata.txt
+Takes about 5 minutes.
+File size 633MB.
 
 
 ```sh

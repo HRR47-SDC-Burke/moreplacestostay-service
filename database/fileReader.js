@@ -14,6 +14,7 @@ async function readEachLine (fileName, callback) {
     var data = JSON.parse(line);
     callback(data);
   }
+
 }
 
 module.exports = {

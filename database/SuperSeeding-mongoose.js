@@ -27,7 +27,7 @@ const airbnbSchema = new mongoose.Schema({
 
 const Airbnb = mongoose.model('Airbnb', airbnbSchema);
 
-id = 1;
+let id = 1;
 
 // clear database before input new data
 Airbnb.deleteMany({}, (err, data) => {
@@ -42,8 +42,8 @@ Airbnb.deleteMany({}, (err, data) => {
     });
 
     // notification if done creating
-    if (data.id === 10000000) {
-      console.log('done');
+    if (id % 100000 === 0) {
+      console.log(id + '%');
     }
 
     id++;

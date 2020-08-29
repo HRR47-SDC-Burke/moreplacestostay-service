@@ -11,7 +11,7 @@
     "server": "nodemon ./server/index.js",
     "database": "node ./database/seed.js",
     "dataGen": "node ./database/TenMillionData.js",
-    "seeding": "node ./database/SuperSeeding.js",
+    "seeding": "node ./database/SuperSeeding-mongoose.js",
     "serve": "webpack-dev-server --mode development",
     "build": "webpack --mode production",
     "test": "jest"
@@ -28,6 +28,7 @@
     "html-webpack-plugin": "^4.3.0",
     "mongoose": "^5.9.27",
     "mongoose-sequence": "^5.2.2",
+    "mysql": "^2.18.1",
     "nodemon": "^2.0.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
