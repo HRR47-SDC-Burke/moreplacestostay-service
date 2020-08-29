@@ -32,7 +32,6 @@ id = 1;
 // clear database before input new data
 Airbnb.deleteMany({}, (err, data) => {
   readEachLine('tenmilliondata.txt', (data) => {
-    //imageurl: `${newImageUrl}/${randomInt(1000)+1}.jpg`
     // add the data id and complete url
     data.id = id;
     data.imageurl = `${newImageUrl}/${data.imageurl}.jpg`;
@@ -46,5 +45,7 @@ Airbnb.deleteMany({}, (err, data) => {
     if (data.id === 10000000) {
       console.log('done');
     }
+
+    id++;
   });
 });
