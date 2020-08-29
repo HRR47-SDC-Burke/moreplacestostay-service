@@ -41,7 +41,7 @@ const Airbnb = mongoose.model('Airbnb', airbnbSchema);
 app.get('/api/moreplacestostay', (req, res) => {
   // Use random input to avoid always getting first few data
   // need to change this to not use math random
-  var start = Date.now() % 989;
+  var start = Date.now() % 9999989;
   var end = start + 13;
 
   // add search condition to avoid getting ALL DATA
