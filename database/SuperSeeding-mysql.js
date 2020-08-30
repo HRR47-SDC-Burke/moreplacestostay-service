@@ -33,8 +33,8 @@ con.query('TRUNCATE TABLE place', (err) => {
 let count = 1;
 const command = 'INSERT INTO place (name, price, imageurl) VALUES (?, ?, ?);';
 
-readEachLine('tenmilliondata.txt', ({ name, price, imageurl }) => {
-  const dataInfo = [name, price, `${newImageUrl}/${imageurl}.jpg`];
+readEachLine('tenmilliondata.csv', ({ name, price, imageurl }) => {
+  const dataInfo = [name, parseInt(price, 10), `${newImageUrl}/${imageurl}.jpg`];
 
   con.query(command, dataInfo, (err, result) => {
     if (err) {

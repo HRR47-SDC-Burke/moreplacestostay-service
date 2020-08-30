@@ -143,3 +143,5 @@ npm run seeding
 ```
 
 store data in tenmilliondata.txt into database
+
+note: remove csv-writer

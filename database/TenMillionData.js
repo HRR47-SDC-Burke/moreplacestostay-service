@@ -32,15 +32,11 @@ const randomLocationName = () => {
 
 const generatePlace = () => {
   // id and complete imageurl will be add within seeding
-  return {
-    name: randomLocationName(),
-    price: randomPrice(),
-    imageurl: randomInt(1000)+1
-  };
+  return `${randomLocationName()},${randomPrice()},${randomInt(1000)+1}\n`;
 }
 
 // clear file
-fs.writeFile('tenmilliondata.txt', '', (err) => {
+fs.writeFile('tenmilliondata.csv', 'name,price,imageurl\n', (err) => {
   if (err) {
     console.log(err);
   } else {
@@ -48,7 +44,7 @@ fs.writeFile('tenmilliondata.txt', '', (err) => {
   }
 });
 
-const writer = fs.createWriteStream('tenmilliondata.txt', { flags: 'a' });
+const writer = fs.createWriteStream('tenmilliondata.csv', { flags: 'a' });
 
 const totalNumberOfData = 10000000;
 let count = 0;
@@ -62,7 +58,7 @@ const writeFile = () => {
     // combine 10 data in string version
     let pack = '';
     for (var i = 0; i < 20; i++) {
-      pack += JSON.stringify(generatePlace()) + '\n';
+      pack += generatePlace();
     }
     count += 20;
     // write 20 data at once to reduce times write is invoked

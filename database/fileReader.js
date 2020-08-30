@@ -1,7 +1,8 @@
 const fs = require('fs');
 const readline = require('readline');
+const csv = require('csv-parser');
 
-async function readEachLine (fileName, callback) {
+/* async function readEachLine (fileName, callback) {
   const fileStream = fs.createReadStream(fileName);
 
   const rl = readline.createInterface({
@@ -19,4 +20,16 @@ async function readEachLine (fileName, callback) {
 
 module.exports = {
   readEachLine
-};
+}; */
+
+// works for small data for sure
+// need to try on large data
+// note: all read data are string!!
+fs.createReadStream('test.csv')
+  .pipe(csv())
+  .on('data', (row) => {
+    console.log(row);
+  })
+  .on('end', () => {
+    console.log('CSV file successfully processed');
+  });
