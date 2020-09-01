@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
-const readline = require('readline');
 const { url } = require('../config.js');
 const { newImageUrl } = require('../config.js');
 const { readEachLine } = require('./fileReader.js');

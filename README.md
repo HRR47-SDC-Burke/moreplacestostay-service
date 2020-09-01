@@ -11,8 +11,8 @@
 ## Table of Contents
 
 1. [Usage](#Usage)
-1. [Requirements](#requirements)
-1. [Development](#development)
+2. [Requirements](#requirements)
+3. [Development](#development)
 
 ## Usage
 
@@ -129,19 +129,62 @@ Pass in an object with property id in the request body.
 
 ### 10,000,000 data
 
+## Generate data
+
 ```sh
 npm run dataGen
 ```
 
-Creating 10000000 data in a text file tenmilliondata.txt
+Creating 10000000 data in a text file tenmilliondata.csv
 Takes about 5 minutes.
-File size 633MB.
+File size 1.15 GB.
 
+## Seeding in MySQL
+
+Store data in tenmilliondata.csv into database
+
+# If seeing secure-file-priv errors while loading csv into mysql:
+
+1. Create database and table:
 
 ```sh
-npm run seeding
+sudo service mysql start
+mysql -u root < database/schema.sql
 ```
 
-store data in tenmilliondata.txt into database
+2. If facing secure-file-priv problem:
 
-note: remove csv-writer
+Add following lines to /etc/mysql/my.cnf:
+
+```sh
+[mysqld]
+secure-file-priv = "/"
+```
+
+Copy csv file into mysql folder with:
+
+```sh
+cp <repo path>/tenmilliondata.csv /var/lib/mysql/place
+```
+
+3. (Optional) Clear table and change settings:
+
+Clear table:
+
+```sh
+TRUNCATE TABLE place;
+```
+
+Change settings to speed up:
+
+```sh
+set unique_checks = 0;
+set foreign_key_checks = 0;
+set sql_log_bin=0;
+```
+
+4. Import csv file with mysql shell:
+
+```sh
+LOAD DATA INFILE '<filename>' INTO TABLE place FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (id, name, price, imageurl);
+```
