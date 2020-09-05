@@ -1,0 +1,11 @@
+config:
+  target: https://localhost:3030
+  phases:
+    - duration: 20
+      arrivalRate: 10
+      name: phase 1
+scenarios:
+  - name: "Get some results"
+  - flow:
+      - get:
+          url: "/api/moreplacestostay"

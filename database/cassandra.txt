@@ -1,0 +1,12 @@
+CREATE KEYSPACE places with replication = {'class':'SimpleStrategy','replication_factor':5};
+
+USE places;
+
+Create table place
+    (
+        id int,
+        name text,
+        price int,
+        imageurl text,
+        Primary key(id)
+    );

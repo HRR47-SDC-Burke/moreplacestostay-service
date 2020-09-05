@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
-const { url, imageUrl } = require('../config.js');
+const { url, imageUrl } = require('../urls.js');
 
 mongoose.connect(url, {
   useNewUrlParser: true,

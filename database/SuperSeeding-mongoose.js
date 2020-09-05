@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
-const readline = require('readline');
 const { url } = require('../config.js');
+const { newImageUrl } = require('../urls.js');
 const { readEachLine } = require('./fileReader.js');
 
 mongoose.connect(url, {
@@ -26,9 +26,14 @@ const airbnbSchema = new mongoose.Schema({
 
 const Airbnb = mongoose.model('Airbnb', airbnbSchema);
 
+let id = 1;
+
 // clear database before input new data
 Airbnb.deleteMany({}, (err, data) => {
   readEachLine('tenmilliondata.txt', (data) => {
+    // add the data id and complete url
+    data.id = id;
+    data.imageurl = `${newImageUrl}/${data.imageurl}.jpg`;
     Airbnb.create(data, (err, result) => {
       if (err) {
         console.log(err);
@@ -36,8 +41,10 @@ Airbnb.deleteMany({}, (err, data) => {
     });
 
     // notification if done creating
-    if (data.id === 10000000) {
-      console.log('done');
+    if (id % 100000 === 0) {
+      console.log(id + '%');
     }
+
+    id++;
   });
 });

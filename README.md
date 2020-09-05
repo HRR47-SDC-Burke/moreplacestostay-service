@@ -11,8 +11,8 @@
 ## Table of Contents
 
 1. [Usage](#Usage)
-1. [Requirements](#requirements)
-1. [Development](#development)
+2. [Requirements](#requirements)
+3. [Development](#development)
 
 ## Usage
 
@@ -126,3 +126,138 @@ DELETE:
 > Delete a location
 
 Pass in an object with property id in the request body.
+
+### 10,000,000 data for MySQL
+
+## Generate data
+
+```sh
+npm run generateMysqlData
+```
+
+Creating 10000000 data in a text file '10000000mysqldata.csv' in folder named 'data'
+Takes about 5 minutes.
+File size 1.07 GB.
+
+## Seeding in MySQL
+
+Store data in '10000000mysqldata.csv' into database
+
+# If seeing secure-file-priv errors while loading csv into mysql:
+
+1. Create database and table:
+
+```sh
+sudo service mysql start
+mysql -u root < database/schema.sql
+```
+
+2. If facing secure-file-priv problem:
+
+Add following lines to /etc/mysql/my.cnf:
+
+```sh
+[mysqld]
+secure-file-priv = "/"
+```
+
+Copy csv file into mysql folder with:
+
+```sh
+cp <repo path>/10000000mysqldata.csv /var/lib/mysql/place
+```
+
+3. (Optional) Clear table and change settings:
+
+Clear table:
+
+```sh
+TRUNCATE TABLE place;
+```
+
+Change settings to speed up:
+
+```sh
+set unique_checks = 0;
+set foreign_key_checks = 0;
+set sql_log_bin=0;
+```
+
+4. Import csv file with mysql shell:
+
+```sh
+LOAD DATA INFILE '10000000mysqldata.csv' INTO TABLE place FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (name, price, imageurl);
+```
+
+### 10,000,000 data for Cassandra
+
+## Generate data
+
+```sh
+npm run generateCassandraData
+```
+
+Creating 10000000 data in a text file '10000000cassandradata.csv' in folder named 'data'
+Takes about 5 minutes.
+File size 1.15 GB.
+
+## Seeding with Cassandra
+
+1. Install cassandra
+
+Make sure java 8 is installed first
+
+Install Cassandra with the following line:
+
+```sh
+sudo apt-get install cassandra
+```
+
+2. Start Cassandra
+
+```sh
+sudo service cassandra start
+cassandra
+cqlsh
+```
+
+If having error after inputting 'cassandra', use 'cassandra -R'
+
+3. Create keyspace
+
+Keyspaces in Cassandra are similar to databases in MySQL
+
+```sh
+CREATE KEYSPACE places with replication = {'class':'SimpleStrategy','replication_factor':5};
+```
+
+4. Use keyspace
+
+```sh
+USE places;
+```
+
+5. Create table
+
+```sh
+Create table place
+    (
+        id int,
+        name text,
+        price int,
+        imageurl text,
+        Primary key(id)
+    );
+```
+
+6. (Optional) Truncate table
+
+```sh
+truncate place;
+```
+
+7. Import file
+
+```sh
+COPY places.place (id,name,price,imageurl) FROM 'data/10000000cassandradata.csv' WITH DELIMITER=',' AND HEADER=TRUE;
+```
