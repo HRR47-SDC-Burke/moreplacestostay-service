@@ -1,22 +1,12 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
-const { url } = require('../config.js');
+const cassandra = require('cassandra-driver');
+const client = new cassandra.Client({
+  contactPoints: ['127.0.0.1:9042'],
+  localDataCenter: 'datacenter1',
+  keyspace:'places'
+});
 
 const app = express();
-
-mongoose.connect(url, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false
-});
-
-const connection = mongoose.connection;
-
-connection.once('open', () => {
-  console.log('MongoDB database connection established successfully');
-});
 
 app.use(express.json());
 
@@ -26,28 +16,33 @@ app.use(function(req, res, next) {
   next();
 });
 
-const airbnbSchema = new mongoose.Schema({
-  name: String,
-  price: Number,
-  imageurl: String,
-});
-
-// create id property with auto increment
-airbnbSchema.plugin(AutoIncrement, { inc_field: 'id' });
-
-const Airbnb = mongoose.model('Airbnb', airbnbSchema);
-
 // Make different API call urls + have them return 12 docs
 app.get('/api/moreplacestostay', (req, res) => {
-  // Use random input to avoid always getting first few data
-  // need to change this to not use math random
-  var start = Date.now() % 9999989;
-  var end = start + 13;
+  // Use random input to avoid always getting same data
+  const start = Date.now() % 9999989;
+  const range = [
+    start,
+    start + 1,
+    start + 2,
+    start + 3,
+    start + 4,
+    start + 5,
+    start + 6,
+    start + 7,
+    start + 8,
+    start + 9,
+    start + 10,
+    start + 11,
+  ];
 
   // add search condition to avoid getting ALL DATA
-  Airbnb.find({ id: { $gt: start, $lt: end } }, (err, data) => {
-    if (err) res.status(404).send(err);
-    res.send(data);
+  const query = 'SELECT * FROM place WHERE id in (?,?,?,?,?,?,?,?,?,?,?,?) ALLOW FILTERING;';
+  client.execute(query, range, { prepare: true })
+    .then((result) => {
+      res.send(result.rows);
+    })
+    .catch((err) => {
+      res.status(404).send(err);
     });
 });
 

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const { url } = require('../config.js');
-const { newImageUrl } = require('../config.js');
+const { newImageUrl } = require('../urls.js');
 const { readEachLine } = require('./fileReader.js');
 
 mongoose.connect(url, {
